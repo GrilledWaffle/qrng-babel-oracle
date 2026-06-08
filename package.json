@@ -1,0 +1,16 @@
+{
+  "name": "qrng-babel-oracle",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Browser-based experiment: fuse alphanumeric input with ANU QRNG quantum entropy, measure Shannon information against a local n-gram predictor, and project the result into a Library of Babel hex address.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test tests/*.test.js"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QRNG · Babel Oracle</title>
+  <link rel="stylesheet" href="/src/ui/styles.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>QRNG · Babel Oracle</h1>
+      <p class="tagline">
+        Ask the room. Your text is fused with live quantum entropy from ANU,
+        measured against a predictor, and projected into the Library of Babel.
+      </p>
+    </header>
+
+    <section class="key-row">
+      <label for="apikey">ANU QRNG API key</label>
+      <input id="apikey" type="password" placeholder="paste key — stored only in this browser" autocomplete="off" />
+      <small>Stored in <code>localStorage</code>. If the call fails we transparently fall back to <code>crypto.getRandomValues</code> and label it.</small>
+    </section>
+
+    <section class="ask">
+      <label for="question">Question</label>
+      <textarea id="question" rows="3" placeholder="how will I navigate the cataplastistic schism?"></textarea>
+      <button id="run">consult the room</button>
+    </section>
+
+    <section class="meters" id="meters"></section>
+
+    <section class="streams" id="streams"></section>
+
+    <section class="babel" id="babel"></section>
+
+    <footer>
+      <p>
+        Source &amp; method: <a href="docs/METHOD.md">docs/METHOD.md</a> ·
+        Inspired by 3Blue1Brown's compression/entropy trilogy.
+      </p>
+    </footer>
+  </main>
+  <script type="module" src="/src/ui/main.js"></script>
+</body>
+</html>
