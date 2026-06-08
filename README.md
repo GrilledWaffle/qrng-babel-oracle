@@ -16,7 +16,7 @@ how much the quantum stream washes away of the predictable structure.
 ```bash
 git clone <this repo>
 cd qrng-babel-oracle
-cp .env.example .env.local        # paste your ANU key (or leave blank to use UI field)
+cp .env.example .env.local        # paste your ANU QRNG API key
 npm install
 npm run dev
 ```
