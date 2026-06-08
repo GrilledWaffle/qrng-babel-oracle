@@ -1,4 +1,5 @@
-// Bit-level utilities. Everything is little-endian-within-a-byte for legibility.
+// Bit-level utilities. Everything is big-endian-within-a-byte for legibility
+// (most-significant bit of each byte appears first in the string).
 
 /** Uint8Array -> string of '0'/'1', MSB first. */
 export function bytesToBitString(bytes) {
@@ -30,15 +31,26 @@ export function bitStringToBytes(bits) {
   return out;
 }
 
-/** Convert bit string to an arbitrary alphabet using base conversion in chunks. */
+/**
+ * Map a bit stream to a sequence of symbols in `alphabet`, using rejection
+ * sampling so the output is provably uniform when the input is uniform.
+ *
+ * Why rejection sampling matters: with alphabet size N=29, doing `byte % 29`
+ * is biased because 256 is not a multiple of 29. Symbols 0..23 appear 9
+ * times in 0..255 while symbols 24..28 appear only 8 times. So the naive
+ * mapping skews ~12% in favor of early letters even from perfect QRNG.
+ *
+ * The fix: discard any byte >= floor(256 / N) * N. This costs us ~9% of
+ * our input bits but guarantees a uniform output distribution.
+ */
 export function bitsToAlphabet(bits, alphabet) {
-  const base = alphabet.length;
-  // Chunk size: how many bits we consume to emit one symbol.
-  // log2(29) ~= 4.858 — use 8 bits then take mod base to stay simple & reversible-ish.
+  const N = alphabet.length;
+  const cutoff = Math.floor(256 / N) * N;   // largest multiple of N <= 256
   let out = '';
   for (let i = 0; i + 8 <= bits.length; i += 8) {
     const byte = parseInt(bits.slice(i, i + 8), 2);
-    out += alphabet[byte % base];
+    if (byte < cutoff) out += alphabet[byte % N];
+    // else: skip — keeps the output uniform over the alphabet
   }
   return out;
 }

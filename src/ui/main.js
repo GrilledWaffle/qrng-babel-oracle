@@ -56,10 +56,10 @@ function render({ inputBits, qBits, fusedBits, inputText, qText, outputText, add
     ${meter('input char H',  m.inputCharEntropy.toFixed(3),  'bits/c')}
     ${meter('qrng char H',   m.qCharEntropy.toFixed(3),      'bits/c')}
     ${meter('output char H', m.outputCharEntropy.toFixed(3), 'bits/c')}
-    ${meter('input bigram surprise',  m.inputBigramBits.toFixed(3),  'bits/c')}
-    ${meter('qrng  bigram surprise',  m.qBigramBits.toFixed(3),      'bits/c')}
-    ${meter('output bigram surprise', m.outputBigramBits.toFixed(3), 'bits/c')}
-    ${meter('Δ predictability', (m.outputBigramBits - m.inputBigramBits).toFixed(3), 'bits/c')}
+    ${meter('input H(text,model)',  m.inputBigramBits.toFixed(3),  'bits/c')}
+    ${meter('qrng  H(text,model)',  m.qBigramBits.toFixed(3),      'bits/c')}
+    ${meter('output H(text,model)', m.outputBigramBits.toFixed(3), 'bits/c')}
+    ${meter('Δ cross-entropy', (m.outputBigramBits - m.inputBigramBits).toFixed(3), 'bits/c')}
   `;
 
   const cap = (s, n = 320) => s.length > n ? s.slice(0, n) + '…' : s;

@@ -74,10 +74,25 @@ so the output inherits the QRNG's entropy floor.
 https://libraryofbabel.info/book.cgi?<hex>-w<1-4>-s<1-5>-v<01-32>:<1-410>
 ```
 
-We take the first 256 bits of `F` as a 64-char hex room id and the next four
-bytes (mod 4, 5, 32, 410) to fill wall/shelf/volume/page. The mapping is
-deterministic given `(question, QRNG draw)` and changes wildly with every
-new draw — which is the point.
+We take the first 256 bits of `F` as a 64-char hex room id, then draw
+wall/shelf/volume/page from the remaining bits using **rejection sampling**
+so each field is exactly uniform over its range. Naive `bits % range` works
+for power-of-two ranges (wall=4, volume=32) but biases the non-power-of-two
+fields (shelf=5, page=410). The bias on `page` was severe in v0.1: only
+pages 1–256 were reachable. The unit tests now prove pages 257–410 are
+reachable from uniform input.
+
+## Uniform symbol mapping (bits → Babel alphabet)
+
+The Babel alphabet has 29 symbols. Mapping a uniform byte by `byte % 29`
+is biased because 256 isn't a multiple of 29: symbols 0–23 each get 9
+source bytes, while symbols 24–28 get only 8. That's a ~12% skew in favor
+of early letters — even with a perfect QRNG.
+
+We fix this with **rejection sampling**: bytes ≥ 232 (the largest multiple
+of 29 ≤ 256) are discarded, the rest are taken mod 29. Cost: ~9% of input
+bytes. Benefit: the output text is provably uniform over the 29 symbols.
+The unit tests verify this empirically (±5% per symbol over 100k draws).
 
 ## What this is *not*
 
